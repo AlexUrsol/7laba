@@ -55,10 +55,10 @@ def consuming():
     q = get_kv(c, "queue")
     channel.queue_declare(queue=q)
     for method_frame, properties, body in channel.consume(q):
-    print("ACCEPTED %r" % body)
-    print('early: ', ALL_TIME_MESSAGES_11)
-    ALL_TIME_MESSAGES_11.append(str(body))
-    print('Now ', ALL_TIME_MESSAGES_11)
+        print("ACCEPTED %r" % body)
+        print('early: ', ALL_TIME_MESSAGES_11)
+        ALL_TIME_MESSAGES_11.append(str(body))
+        print('Now ', ALL_TIME_MESSAGES_11)
 
 if __name__ == '__main__':
     port = 1122
@@ -67,4 +67,6 @@ if __name__ == '__main__':
     register_service(id, port)
     print('LETS GO 1')
     app.run(host='0.0.0.0', port=port, debug=False)
+
+
 
