@@ -34,7 +34,6 @@ def get_kv(c, name):
 
 @app.route('/messages',  methods=['GET'])
 def messages():
- 
         print(ALL_TIME_MESSAGES_11)
         return str(ALL_TIME_MESSAGES_11)
 
@@ -56,11 +55,10 @@ def consuming():
     q = get_kv(c, "queue")
     channel.queue_declare(queue=q)
     for method_frame, properties, body in channel.consume(q):
-        print("ACCEPTED %r" % body)
-    
-            print('early: ', ALL_TIME_MESSAGES_11)
-            ALL_TIME_MESSAGES_11.append(str(body))
-            print('Now ', ALL_TIME_MESSAGES_11)
+    print("ACCEPTED %r" % body)
+        print('early: ', ALL_TIME_MESSAGES_11)
+        ALL_TIME_MESSAGES_11.append(str(body))
+        print('Now ', ALL_TIME_MESSAGES_11)
 
 if __name__ == '__main__':
     port = 1122
