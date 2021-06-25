@@ -28,20 +28,22 @@ def get_kv(c, name):
     return c.kv.get(name)[1]['Value'].decode()
 
 
-@app.route('/logging-service', methods=['GET', 'POST'])
-def logger():
+@app.route('/logging-service', methods=['POST'])
+def logger_post():
     m = get_kv(consul_client, 'map')
-    if request.method == 'POST':
-        print(f'\n --- post request from facade --- \n {request.json}\n')
-        distributed_map = client.get_map(m)
-        distributed_map.set(str(request.json['uuid']), str(request.json['message']))
-        print('--- SUCCESSFULLY SAVED ---')
-        return app.response_class(status=200)
-    else:
-        distributed_map = client.get_map(m)
-        messages = distributed_map.values().result()
-        print('\n --- get request from facade --- \n')
-        return ','.join([msg for msg in messages]) or ''
+    print(f'\n --- post request from facade --- \n {request.json}\n')
+    distributed_map = client.get_map(m)
+    distributed_map.set(str(request.json['uuid']), str(request.json['message']))
+    print('--- SUCCESSFULLY SAVED ---')
+    return app.response_class(status=200)
+
+@app.route('/logging-service', methods=['GET'])
+def logger_get():
+    m = get_kv(consul_client, 'map')
+    distributed_map = client.get_map(m)
+    messages = distributed_map.values().result()
+    print('\n --- get request from facade --- \n')
+    return ','.join([msg for msg in messages]) or ''
 
 
 if __name__ == '__main__':
@@ -54,3 +56,4 @@ if __name__ == '__main__':
     )
     register_service(consul_client, id, port)
     app.run(host='0.0.0.0', port=port, debug=True)
+
