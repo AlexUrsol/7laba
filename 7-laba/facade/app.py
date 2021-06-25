@@ -44,23 +44,24 @@ def get_rand_logging_client():
 def get_rand_messages_service_url() -> str:
     return f'http://{discover_service("messager")}/messages'
 
-@app.route('/facade-service', methods=['GET', 'POST'])
-def facade_service():
-    if request.method == 'POST':
-        post_msg_to_mq(request.json.get('message'))
-        logging_service_response = requests.post(
-            url=get_rand_logging_client(),
-            json={
-                "uuid": str(uuid.uuid4()),
-                "message": request.json.get('message')
-            }
-        )
-        status = logging_service_response.status_code
-        return app.response_class(status=status)
-    else:
-        logging_service_response = requests.get(get_rand_logging_client())
-        messages_service_r = requests.get(get_rand_messages_service_url())
-        return str(logging_service_response.text) + ' : ' + str(messages_service_r.text)
+@app.route('/facade-service', methods=['POST'])
+def facade_service_post():
+    post_msg_to_mq(request.json.get('message'))
+    logging_service_response = requests.post(
+        url=get_rand_logging_client(),
+        json={
+            "uuid": str(uuid.uuid4()),
+            "message": request.json.get('message')
+        }
+    )
+    status = logging_service_response.status_code
+    return app.response_class(status=status)
+
+@app.route('/facade-service', methods=['GET'])
+def facade_service_get():
+    logging_service_response = requests.get(get_rand_logging_client())
+    messages_service_r = requests.get(get_rand_messages_service_url())
+    return str(logging_service_response.text) + ' : ' + str(messages_service_r.text)
 
 @app.route('/health', methods=['GET'])
 def health():
