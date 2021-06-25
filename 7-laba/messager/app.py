@@ -56,9 +56,9 @@ def consuming():
     channel.queue_declare(queue=q)
     for method_frame, properties, body in channel.consume(q):
     print("ACCEPTED %r" % body)
-        print('early: ', ALL_TIME_MESSAGES_11)
-        ALL_TIME_MESSAGES_11.append(str(body))
-        print('Now ', ALL_TIME_MESSAGES_11)
+    print('early: ', ALL_TIME_MESSAGES_11)
+    ALL_TIME_MESSAGES_11.append(str(body))
+    print('Now ', ALL_TIME_MESSAGES_11)
 
 if __name__ == '__main__':
     port = 1122
