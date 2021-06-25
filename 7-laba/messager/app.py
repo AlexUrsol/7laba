@@ -1,4 +1,4 @@
-import threading
+
 
 import pika
 from flask import Flask
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 CONSUL_SERVER_ADDR = "consul-server"
 ALL_TIME_MESSAGES_11 = []
-LOCK = threading.Lock()
+
 
 
 def register_service(id, port):
@@ -34,7 +34,7 @@ def get_kv(c, name):
 
 @app.route('/messages',  methods=['GET'])
 def messages():
-    with LOCK:
+ 
         print(ALL_TIME_MESSAGES_11)
         return str(ALL_TIME_MESSAGES_11)
 
@@ -57,7 +57,7 @@ def consuming():
     channel.queue_declare(queue=q)
     for method_frame, properties, body in channel.consume(q):
         print("ACCEPTED %r" % body)
-        with LOCK:
+    
             print('early: ', ALL_TIME_MESSAGES_11)
             ALL_TIME_MESSAGES_11.append(str(body))
             print('Now ', ALL_TIME_MESSAGES_11)
